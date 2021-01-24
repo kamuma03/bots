@@ -9,21 +9,26 @@ from time import sleep, time
 import random
 import re
 import subprocess, os
+import requests
 
 max_time = 10
 
-def open_chrome(port=9220, on_mac=True):
+def open_chrome(port, _os="windows"):
     my_env = os.environ.copy()
-    if on_mac:
+    if _os == "mac":
         subprocess.Popen(['open', '-a', "Google Chrome", '--args', f'--remote-debugging-port={port}', 'http://www.example.com'], env=my_env)
-    else:
+    elif _os == "linux":
         subprocess.Popen(f'google-chrome --remote-debugging-port={port} --user-data-dir=bots'.split(), env=my_env)
+    else:
+        os.system(f'start chrome --remote-debugging-port={port}  "https://www.youtube.com/feed/music" ')
+
+
 
 class Bot():
     def __init__(self, port_no=9220, headless=False, verbose=False):
         print('initialising bot')
 
-        open_chrome()
+        open_chrome(port_no)
 
         options = Options()
         options.add_argument("--no-sandbox")	# without this, the chrome webdriver can't start (SECURITY RISK)
@@ -76,4 +81,23 @@ class Bot():
 if __name__ == '__main__':
     # EXAMPLE USAGE
     bot = Bot()
-    bot.driver.get('https://www.google.com')
+
+    searaches = ['shoes', 'tops', 'pants']
+
+    for search in searaches:
+        bot.driver.get(f'https://www.depop.com/search/?q={search}')
+        results = bot.driver.find_element_by_xpath('//*[@id="main"]/div[2]/div/ul/li/a')
+        print(f'found {len(results)} results for search "{search}"')
+        results = [r.get_attribute('href') for r in results]
+
+        for result in results:
+
+            print(result)
+
+            bot.driver.get(result)
+
+            bot.driver.execute_script("window.scrollby(0,925)", "")
+
+            result = result.split('/')[-2]
+
+            
