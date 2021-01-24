@@ -106,4 +106,12 @@ if __name__ == '__main__':
             imgs = [i for i in imgs if i != None]
 
             os.makedirs(f'data/{result}', exist_ok=True)
+
+            for idx, img_url in enumerate(imgs):
+                response = requests.get(img_url)
+                img_name = f'{result}-{idx}'
+                file_ext = img_url.split('.')[-1]
+                with open(f'data/{result}/{img_name}.{file_ext}', 'wb') as f:
+                    f.write(response.content)
             
+            print()
