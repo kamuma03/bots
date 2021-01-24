@@ -100,4 +100,10 @@ if __name__ == '__main__':
 
             result = result.split('/')[-2]
 
+            imgs = bot.driver.find_element_by_xpath('//*[@id="main"]/div[2]/div/img')
+            print('# imgs: ', len(imgs))
+            imgs = [i.get_attribute('src') for i in imgs]
+            imgs = [i for i in imgs if i != None]
+
+            os.makedirs(f'data/{result}', exist_ok=True)
             
