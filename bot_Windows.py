@@ -13,26 +13,12 @@ import requests
 
 max_time = 10
 
-def open_chrome(port, _os="linux"):
-    my_env = os.environ.copy()
-    if _os == "mac":
-        subprocess.Popen(['open', '-a', "Google Chrome", '--args', f'--remote-debugging-port={port}', 'http://www.example.com'], env=my_env)
-    elif _os == "linux":
-        subprocess.Popen(f'google-chrome --remote-debugging-port={port} --user-data-dir=bots'.split(), env=my_env)
-    else: # Windows doesn't work 
-        os.system(f'start chrome --remote-debugging-port={port}  "https://www.youtube.com/feed/music" ')
-
-
-
 class Bot():
-    def __init__(self, port_no=53205, headless=False, verbose=False):
+    def __init__(self, headless=False, verbose=False):
         print('initialising bot')
-
-        open_chrome(port_no)
 
         options = Options()
         options.add_argument("--no-sandbox")	# without this, the chrome webdriver can't start (SECURITY RISK)
-        options.add_experimental_option(f"debuggerAddress", f"127.0.0.1:{port_no}")	# attach to the same port that you're running chrome on
         if headless:
             options.add_argument("--headless")
         #options.add_argument("--window-size=1920x1080")
@@ -86,7 +72,8 @@ if __name__ == '__main__':
 
     for search in searaches:
         bot.driver.get(f'https://www.depop.com/search/?q={search}')
-        results = bot.driver.find_element_by_xpath('//*[@id="main"]/div[2]/div/ul/li/a')
+        
+        results = bot.driver.find_elements_by_xpath('//*[@id="main"]/div[2]/div/ul/li/a')
         print(f'found {len(results)} results for search "{search}"')
         results = [r.get_attribute('href') for r in results]
 
@@ -96,11 +83,11 @@ if __name__ == '__main__':
 
             bot.driver.get(result)
 
-            bot.driver.execute_script("window.scrollby(0,925)", "")
+            bot.driver.execute_script("window.scrollBy(0,925)", "")
 
             result = result.split('/')[-2]
 
-            imgs = bot.driver.find_element_by_xpath('//*[@id="main"]/div[2]/div/img')
+            imgs = bot.driver.find_elements_by_xpath('//*[@id="main"]/div[1]/div[2]/div/img')
             print('# imgs: ', len(imgs))
             imgs = [i.get_attribute('src') for i in imgs]
             imgs = [i for i in imgs if i != None]
