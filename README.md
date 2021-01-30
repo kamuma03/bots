@@ -7,6 +7,6 @@ Start up a browser driven by selenium by running `python bot.py`
 For this to work, you will need to have
 1. Downloaded and unzipped [Chromedriver](https://chromedriver.chromium.org/downloads)
 2. Added it to your path by moving it to `/usr/local/bin` (Mac/Linux) 
-3. for windows saved in the same folder of the repository 
+3. For Windows saved in the same folder of the repository 
 
-for windows there is a specific bot file to be used
+For Windows there is a specific bot file to be used
