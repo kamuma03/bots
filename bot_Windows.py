@@ -70,20 +70,32 @@ if __name__ == '__main__':
 
     searaches = ['shoes', 'tops', 'pants']
 
+    sleepTimes = [1.1, 1.5, 2]
+
     for search in searaches:
         bot.driver.get(f'https://www.depop.com/search/?q={search}')
-        
+
+        #Scroll down the page to getter more search result
+        bot.driver.execute_script("window.scrollBy(0,925)", "")
+
+        # wait time to download all in the browser
+        sleep(random.choice(sleepTimes))
+
         results = bot.driver.find_elements_by_xpath('//*[@id="main"]/div[2]/div/ul/li/a')
         print(f'found {len(results)} results for search "{search}"')
         results = [r.get_attribute('href') for r in results]
-
+        print('# Search results: ', len(results)) 
         for result in results:
 
             print(result)
 
             bot.driver.get(result)
 
+            #Scroll down the page to getter more search result
             bot.driver.execute_script("window.scrollBy(0,925)", "")
+            
+            # wait time to download all in the browser
+            sleep(random.choice(sleepTimes))
 
             result = result.split('/')[-2]
 
